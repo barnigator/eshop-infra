@@ -1,0 +1,32 @@
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  up:
+    desc: Start PostgresSQL
+    cmds:
+      - docker compose up -d postgres
+
+  down:
+    desc: Stop infrastructure
+    cmds:
+      - docker compose down
+
+  logs:
+    desc: Show PostgreSQL logs
+    cmds:
+      - docker compose logs -f postgres
+
+  ps:
+    desc: Show infrastructure status
+    cmds:
+      - docker compose ps
+
+  migrate-seller:
+    desc: Apply seller service migrations
+    cmds:
+      - docker compose run --rm migrator
+

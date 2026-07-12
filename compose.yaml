@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: eshop-postgres
+
+    env_file:
+      - .env
+
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+    volumes:
+      - eshop_pg_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: "no"
+
+  migrator:
+    image: migrate/migrate:v4.19.1
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ../eshop-seller-service/migrations:/migrations:ro
+    command:
+      [
+        "-path", "/migrations",
+        "-database", "${POSTGRES_DSN}" ,
+        "up"
+      ]
+
+volumes:
+  eshop_pg_data:
