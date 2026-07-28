@@ -18,7 +18,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    restart: "no"
 
   migrator:
     image: migrate/migrate:v4.19.1
@@ -31,6 +30,20 @@ services:
       [
         "-path", "/migrations",
         "-database", "${POSTGRES_DSN}" ,
+        "up"
+      ]
+
+  seller-test-migrator:
+    image: migrate/migrate:v4.19.1
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ../eshop-seller-service/migrations:/migrations:ro
+    command:
+      [
+        "-path", "/migrations",
+        "-database", "${ESHOP_SELLER_TEST_DSN}",
         "up"
       ]
 
