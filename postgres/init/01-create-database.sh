@@ -11,6 +11,7 @@ psql \
   --set=sso_password="$ESHOP_SSO_DB_PASSWORD" <<-'EOSQL'
     CREATE USER :"seller_user" WITH PASSWORD :'seller_password';
     CREATE DATABASE eshop_seller OWNER :"seller_user";
+    CREATE DATABASE eshop_seller_test OWNER :"seller_user";
 
     CREATE USER :"sso_user" WITH PASSWORD :'sso_password';
     CREATE DATABASE eshop_sso OWNER :"sso_user";

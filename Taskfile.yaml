@@ -6,27 +6,51 @@ tasks:
       - task --list
 
   up:
-    desc: Start PostgresSQL
+    desc: Start all infrastructure and services
+    cmds:
+      - docker compose up -d --build
+
+  postgres-up:
+    desc: Start PostgreSQL only
     cmds:
       - docker compose up -d postgres
+
+  seller-up:
+    desc: Start PostgreSQL, migrations and seller-service
+    cmds:
+      - docker compose up -d --build seller-service
 
   down:
     desc: Stop infrastructure
     cmds:
       - docker compose down
 
-  logs:
-    desc: Show PostgreSQL logs
-    cmds:
-      - docker compose logs -f postgres
-
   ps:
     desc: Show infrastructure status
     cmds:
       - docker compose ps
 
+  logs:
+    desc: Show all logs
+    cmds:
+      - docker compose logs -f
+
+  logs-postgres:
+    desc: Show PostgreSQL logs
+    cmds:
+      - docker compose logs -f postgres
+
+  logs-seller:
+    desc: Show seller-service logs
+    cmds:
+      - docker compose logs -f seller-service
+
   migrate-seller:
-    desc: Apply seller service migrations
+    desc: Apply seller-service migrations
     cmds:
       - docker compose run --rm migrator
 
+  migrate-seller-test:
+    desc: Apply seller-service migrations to test database
+    cmds:
+      - docker compose run --rm seller-test-migrator

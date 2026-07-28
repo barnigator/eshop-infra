@@ -29,9 +29,10 @@ services:
     command:
       [
         "-path", "/migrations",
-        "-database", "${POSTGRES_DSN}" ,
+        "-database", "${ESHOP_SELLER_POSTGRES_DSN}" ,
         "up"
       ]
+    restart: "no"
 
   seller-test-migrator:
     image: migrate/migrate:v4.19.1
@@ -46,6 +47,29 @@ services:
         "-database", "${ESHOP_SELLER_TEST_DSN}",
         "up"
       ]
+    restart: "no"
+
+  seller-service:
+    build:
+      context: ../eshop-seller-service
+      dockerfile: Dockerfile
+
+    container_name: eshop-seller-service
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+
+    environment:
+      CONFIG_PATH: /app/config/local.yaml
+      POSTGRES_DSN: ${ESHOP_SELLER_POSTGRES_DSN}
+
+    ports:
+      - "44045:44045"
+
+    restart: unless-stopped
 
 volumes:
   eshop_pg_data:
