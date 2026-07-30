@@ -71,5 +71,46 @@ services:
 
     restart: unless-stopped
 
+  sso-migrator:
+    image: migrate/migrate:v4.19.1
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    volumes:
+      - ../sso/migrations:/migrations:ro
+
+    command:
+      [
+        "-path", "/migrations",
+        "-database", "${ESHOP_SSO_POSTGRES_DSN}",
+        "up"
+      ]
+
+    restart: "no"
+
+  sso:
+    build:
+      context: ../sso
+      dockerfile: Dockerfile
+
+    container_name: eshop-sso
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      sso-migrator:
+        condition: service_completed_successfully
+
+    environment:
+      CONFIG_PATH: /app/config/local.yaml
+      POSTGRES_DSN: ${ESHOP_SSO_POSTGRES_DSN}
+
+    ports:
+      - "44044:44044"
+
+    restart: on-failure
+
 volumes:
   eshop_pg_data:

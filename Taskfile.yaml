@@ -54,3 +54,18 @@ tasks:
     desc: Apply seller-service migrations to test database
     cmds:
       - docker compose run --rm seller-test-migrator
+
+  sso-up:
+    desc: Start PostgreSQL, SSO migrations and SSO service
+    cmds:
+      - docker compose up -d --build sso
+
+  logs-sso:
+    desc: Show SSO logs
+    cmds:
+      - docker compose logs -f sso
+
+  migrate-sso:
+    desc: Apply SSO migrations
+    cmds:
+      - docker compose run --rm sso-migrator

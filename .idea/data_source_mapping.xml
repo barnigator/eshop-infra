@@ -2,5 +2,6 @@
 <project version="4">
   <component name="DataSourcePerFileMappings">
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/a3a0ecd5-0476-400d-bfac-0510a0dcc758/console.sql" value="a3a0ecd5-0476-400d-bfac-0510a0dcc758" />
+    <file url="file://$PROJECT_DIR$/../sso/internal/auth/repository/postgres/postgres.go" value="a3a0ecd5-0476-400d-bfac-0510a0dcc758" />
   </component>
 </project>
